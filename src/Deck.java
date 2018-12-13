@@ -30,7 +30,7 @@ public class Deck {
      * @param values is an array containing all of the card point values.
      */
     public Deck(String[] ranks, String[] suits, int[] values) {
-        List<Card> cards = new ArrayList<Card>();
+        cards = new ArrayList<Card>();
         for (int i = 0; i < suits.length; i++)
         {
             for (int j = 0; j < ranks.length; j++)
@@ -39,8 +39,6 @@ public class Deck {
         size = cards.size();
         shuffle();
     }
-
-
     /**
      * Determines if this deck is empty (no undealt cards).
      * @return true if this deck is empty, false otherwise.
@@ -62,8 +60,12 @@ public class Deck {
      * and reset the size to represent the entire deck.
      */
     public void shuffle() {
-        /* *** TO BE IMPLEMENTED IN ACTIVITY 4 *** */
-        //this is a test
+        for (int k = cards.size()-1; k > 0; k--) //"efficient selection shuffle" has the same structure as selection sort
+        {
+            int r = (int)(Math.random() * (k + 1));
+            cards.set(r,cards.set(k,cards.get(r)));
+        }
+        size = cards.size();
     }
 
     /**
@@ -76,7 +78,7 @@ public class Deck {
             return null;
         else
             size--;
-            return cards.get(size + 1);
+            return cards.get(size);
     }
 
     /**
