@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * The ElevensBoard class represents the board in a game of Elevens.
  */
-public class ElevensBoard extends Board {
+public class ThirteensBoard extends Board {
 
     /**
      * The size (number of cards) on the board.
@@ -27,12 +27,12 @@ public class ElevensBoard extends Board {
      * The values of the cards for this game to be sent to the deck.
      */
     private static final int[] POINT_VALUES =
-            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0};
+            {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
 
     /**
      * Creates a new <code>ElevensBoard</code> instance.
      */
-    public ElevensBoard() {
+    public ThirteensBoard() {
         super(BOARD_SIZE, RANKS, SUITS, POINT_VALUES);
     }
 
@@ -47,10 +47,10 @@ public class ElevensBoard extends Board {
      */
     @Override
     public boolean isLegal(List<Integer> selectedCards) {
-        if (selectedCards.size() == 2) {
-            return containsPairSum11(selectedCards);
-        } else if (selectedCards.size() == 3) {
-            return containsJQK(selectedCards);
+        if (selectedCards.size() == 1) {
+            return containsK(selectedCards);
+        } else if (selectedCards.size() == 2) {
+            return containsPairSum13(selectedCards);
         } else {
             return false;
         }
@@ -67,7 +67,7 @@ public class ElevensBoard extends Board {
     @Override
     public boolean anotherPlayIsPossible() {
         List<Integer> cIndexes = cardIndexes();
-        return containsPairSum11(cIndexes) || containsJQK(cIndexes);
+        return containsPairSum13(cIndexes) || containsK(cIndexes);
     }
 
     /**
@@ -78,41 +78,27 @@ public class ElevensBoard extends Board {
      * @return a list of the indexes of an 11-pair, if an 11-pair was found;
      *         an empty list, if an 11-pair was not found.
      */
-    private boolean containsPairSum11(List<Integer> selectedCards) {
-        for (int sc1 = 0; sc1 < selectedCards.size(); sc1++) {
-            int c1 = selectedCards.get(sc1).intValue();
-            for (int sc2 = sc1 + 1; sc2 < selectedCards.size(); sc2++) {
-                int c2 = selectedCards.get(sc2).intValue();
-                if (cardAt(c1).pointValue() + cardAt(c2).pointValue() == 11) {
-                    return true;
+    private boolean containsPairSum13(List<Integer> selectedCards) {
+            for (int sc1 = 0; sc1 < selectedCards.size(); sc1++) {
+                int c1 = selectedCards.get(sc1).intValue();
+                for (int sc2 = sc1 + 1; sc2 < selectedCards.size(); sc2++) {
+                    int c2 = selectedCards.get(sc2).intValue();
+                    if (cardAt(c1).pointValue() + cardAt(c2).pointValue() == 13) {
+                        return true;
+                    }
                 }
             }
-        }
         return false;
     }
 
-    /**
-     * Look for a JQK in the selected cards.
-     * @param selectedCards selects a subset of this board.  It is list
-     *                      of indexes into this board that are searched
-     *                      to find a JQK group.
-     * @return a list of the indexes of a JQK, if a JQK was found;
-     *         an empty list, if a JQK was not found.
-     */
-    private boolean containsJQK(List<Integer> selectedCards) {
-        boolean foundJack = false;
-        boolean foundQueen = false;
+    private boolean containsK (List<Integer> selectedCards){
         boolean foundKing = false;
         for (Integer kObj : selectedCards) {
             int k = kObj.intValue();
-            if (cardAt(k).rank().equals("jack")) {
-                foundJack = true;
-            } else if (cardAt(k).rank().equals("queen")) {
-                foundQueen = true;
-            } else if (cardAt(k).rank().equals("king")) {
+            if (cardAt(k).rank().equals("king")) {
                 foundKing = true;
             }
         }
-        return foundJack && foundQueen && foundKing;
+        return foundKing;
     }
 }
